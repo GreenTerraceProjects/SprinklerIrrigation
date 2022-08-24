@@ -1,19 +1,12 @@
 #ifndef _RTC_SETTING_HPP_
 #define _RTC_SETTING_HPP_
 
-#include "../../inputs/input-with-polling.hpp"
+#include "../../inputs/input.hpp"
+#include <RTClib.h>
 
-class RtcAdjustmentArgs {
-
-};
-
-class RtcAdjustmentResult {
-
-};
-
-class RtcAdjustment : public InputWithPolling<RtcAdjustmentResult, RtcAdjustmentArgs> {
+class RtcAdjustment : public Input {
 public:
-    RtcAdjustment(RtcAdjustmentArgs &args);
+    RtcAdjustment();
 
 protected:
     DateTime lastPolling;
@@ -23,9 +16,7 @@ protected:
     
     bool poll() override;
     bool handlePolling() override;
-    bool handleInput(char inputKey) override;
-    
-    RtcAdjustmentResult createResult() override;
+    bool handleKeyPressed(char inputKey) override;
 
 protected:
     DateTime readRtcValue();

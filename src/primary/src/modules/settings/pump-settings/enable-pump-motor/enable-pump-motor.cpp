@@ -1,11 +1,11 @@
 #include "enable-pump-motor.hpp"
-#include "enable-pump-motor-reader.hpp"
-#include "enable-pump-motor-writer.hpp"
 #include "../../../inputs/menu/menu.hpp"
+#include "../../../devices/eeprom/addresses.hpp"
 #include <avr/pgmspace.h>
+#include <EEPROM.h>
 
-EnablePumpMotor::EnablePumpMotor(EnablePumpMotorArgs &args)
-    : Input(args) {
+EnablePumpMotor::EnablePumpMotor()
+    : Input() {
 
 }
 
@@ -13,29 +13,18 @@ void EnablePumpMotor::initialize() {
     this->showOptions();
 }
 
-bool EnablePumpMotor::handleInput(char inputKey) {
+bool EnablePumpMotor::handleKeyPressed(char inputKey) {
     return false;
 }
 
-EnablePumpMotorResult EnablePumpMotor::createResult() {
-    return EnablePumpMotorResult();
-}
-
 bool EnablePumpMotor::readSetting() {
-    EnablePumpMotorReaderArgs args;
-    EnablePumpMotorReader reader(args);
-    reader.run();
-    EnablePumpMotorReaderResult result = reader.getResult();
-
-    return result.value;
+    bool value;
+    EEPROM.get(EEPROM_PUMP_MOTOR_ENABLED_ADDRESS, value);
+    return value;
 }
 
 void EnablePumpMotor::writeSetting(bool value) {
-    EnablePumpMotorWriterArgs args {
-        .value = value
-    };
-    EnablePumpMotorWriter writer(args);
-    writer.run();
+    EEPROM.put(EEPROM_PUMP_MOTOR_ENABLED_ADDRESS, value);
 }
 
 static const char menu_item_0[] PROGMEM = "No";

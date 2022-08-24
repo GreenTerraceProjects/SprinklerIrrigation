@@ -9,18 +9,16 @@ public:
     int selectedDelayIndex;
 };
 
-class WaterHammerDelayResult {
-
-};
-
-class WaterHammerDelay : public Input<WaterHammerDelayResult, WaterHammerDelayArgs> {
+class WaterHammerDelay : public Input {
 public:
     WaterHammerDelay(WaterHammerDelayArgs &args);
 
 protected:
+    WaterHammerDelayArgs &args;
+
+protected:
     void initialize() override;
-    bool handleInput(char inputKey) override;
-    WaterHammerDelayResult createResult() override;
+    bool handleKeyPressed(char inputKey) override;
 
 protected:
     uint16_t readDelay();

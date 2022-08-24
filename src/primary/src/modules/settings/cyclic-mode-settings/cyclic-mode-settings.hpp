@@ -3,25 +3,16 @@
 
 #include "../../inputs/input.hpp"
 
-class CyclicModeSettingsArgs {
-
-};
-
-class CyclicModeSettingsResult {
-
-};
-
-class CyclicModeSettings : public Input<CyclicModeSettingsResult, CyclicModeSettingsArgs> {
+class CyclicModeSettings : public Input {
 public:
-    CyclicModeSettings(CyclicModeSettingsArgs &args);
+    CyclicModeSettings();
 
 protected:
     int selectedSettingIndex;
 
 protected:
     void initialize() override;
-    bool handleInput(char inputKey) override;
-    CyclicModeSettingsResult createResult() override;
+    bool handleKeyPressed(char inputKey) override;
 
 protected:
     void showSettings();

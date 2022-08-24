@@ -11,9 +11,12 @@ public:
     uint32_t duration;
 };
 
-class CustomModeEntryLabel: public Label<CustomModeEntryLabelArgs> {
+class CustomModeEntryLabel: public Label {
 public:
     CustomModeEntryLabel(CustomModeEntryLabelArgs &args);
+
+protected:
+    CustomModeEntryLabelArgs &args;
 
 protected:
     void initialize() override;

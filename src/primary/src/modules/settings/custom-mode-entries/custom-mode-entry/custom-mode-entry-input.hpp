@@ -17,11 +17,12 @@ public:
 };
 
 class CustomModeEntryInput
-    : public Input<
-        CustomModeEntryInputResult,
-        CustomModeEntryInputArgs> {
+    : public Input {
 public:
     CustomModeEntryInput(CustomModeEntryInputArgs &args);
+
+protected:
+    CustomModeEntryInputArgs &args;
 
 protected:
     int lineIndex;
@@ -30,8 +31,10 @@ protected:
 
 protected:
     void initialize() override;
-    bool handleInput(char inputKey) override;
-    CustomModeEntryInputResult createResult() override;
+    bool handleKeyPressed(char inputKey) override;
+
+public:
+    CustomModeEntryInputResult getResult();
 
 protected:
     void viewEntry();

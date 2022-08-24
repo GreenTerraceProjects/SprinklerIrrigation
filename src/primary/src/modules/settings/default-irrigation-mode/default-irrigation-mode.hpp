@@ -4,22 +4,13 @@
 #include "../../inputs/input.hpp"
 #include <stdint.h>
 
-class DefaultIrrigationModeArgs {
-
-};
-
-class DefaultIrrigationModeResult {
-
-};
-
-class DefaultIrrigationMode : public Input<DefaultIrrigationModeResult, DefaultIrrigationModeArgs> {
+class DefaultIrrigationMode : public Input {
 public:
-    DefaultIrrigationMode(DefaultIrrigationModeArgs &args);
+    DefaultIrrigationMode();
 
 protected:
     void initialize() override;
-    bool handleInput(char inputKey) override;
-    DefaultIrrigationModeResult createResult() override;
+    bool handleKeyPressed(char inputKey) override;
 
 protected:
     uint8_t readDefaultIrrigationMode();

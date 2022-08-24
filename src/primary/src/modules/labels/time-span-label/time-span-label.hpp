@@ -11,9 +11,12 @@ public:
     const char *label;
 };
 
-class TimeSpanLabel : public Label<TimeSpanLabelArgs> {
+class TimeSpanLabel : public Label {
 public:
     TimeSpanLabel(TimeSpanLabelArgs &args);
+
+protected:
+    TimeSpanLabelArgs &args;
 
 protected:
     void initialize() override;

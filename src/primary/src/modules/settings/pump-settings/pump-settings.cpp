@@ -4,8 +4,8 @@
 #include "../../inputs/menu/menu.hpp"
 #include <avr/pgmspace.h>
 
-PumpSettings::PumpSettings(PumpSettingsArgs &args)
-    : Input(args) {
+PumpSettings::PumpSettings()
+    : Input() {
 
 }
 
@@ -13,12 +13,8 @@ void PumpSettings::initialize() {
     this->showSettings();
 }
 
-bool PumpSettings::handleInput(char inputKey) {
+bool PumpSettings::handleKeyPressed(char inputKey) {
     return false;
-}
-
-PumpSettingsResult PumpSettings::createResult() {
-    return PumpSettingsResult();
 }
 
 static const char pump_settings_menu_item_0[] PROGMEM = "Pump Motor Enabled";
@@ -60,13 +56,11 @@ void PumpSettings::showSettings() {
 }
 
 void PumpSettings::showEnablePumpMotor(){
-    EnablePumpMotorArgs args;
-    EnablePumpMotor enablePumpMotor(args);
+    EnablePumpMotor enablePumpMotor;
     enablePumpMotor.run();
 }
 
 void PumpSettings::showWaterHammerDelays(){
-    WaterHammerDelaysArgs args;
-    WaterHammerDelays waterHammerDelays(args);
+    WaterHammerDelays waterHammerDelays;
     waterHammerDelays.run();
 }

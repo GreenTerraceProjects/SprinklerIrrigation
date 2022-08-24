@@ -3,8 +3,9 @@
 #include "../../strings/formats/date-time-format-strings.hpp"
 #include "../../devices/lcd/lcd.hpp"
 #include "../../devices/buzzer/buzzer.hpp"
+#include "../../devices/keypad/keypad.hpp"
 
-TimeSpanInput::TimeSpanInput(TimeSpanInputArgs &args) : Input(args) {
+TimeSpanInput::TimeSpanInput(TimeSpanInputArgs &args) : args(args), Input(&keypad) {
 
 }
 
@@ -16,7 +17,7 @@ void TimeSpanInput::initialize() {
   this->refreshDisplay();
 }
 
-bool TimeSpanInput::handleInput(char inputKey) {
+bool TimeSpanInput::handleKeyPressed(char inputKey) {
   switch (inputKey) {
     case '0':
     case '1':
@@ -81,20 +82,16 @@ bool TimeSpanInput::handleInput(char inputKey) {
   return true;
 }
 
-TimeSpanInputResult TimeSpanInput::createResult() {
-  TimeSpanInputResult result;
-  
+TimeSpan TimeSpanInput::getTimeSpan() {  
   if (this->isCanceled()) {
-    result.value = this->args.defaultValue;
-  } else {
-    result.value = TimeSpan(
-      this->days,
-      this->hours,
-      this->minutes,
-      this->seconds);
+    return this->args.defaultValue;
   }
 
-  return result;
+  return TimeSpan(
+    this->days,
+    this->hours,
+    this->minutes,
+    this->seconds);
 }
 
 void TimeSpanInput::setupDisplayFrame() {

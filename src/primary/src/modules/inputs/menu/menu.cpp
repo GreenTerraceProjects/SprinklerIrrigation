@@ -1,9 +1,10 @@
 #include <avr/pgmspace.h>
 #include "menu.hpp"
 #include "../../devices/lcd/lcd.hpp"
+#include "../../devices/keypad/keypad.hpp"
 #include "../../strings/formats/number-format-strings.hpp"
 
-Menu::Menu(MenuArgs& args) : Input(args) {
+Menu::Menu(MenuArgs& args) : args(args), Input(&keypad) {
 
 }
 
@@ -16,7 +17,7 @@ void Menu::initialize() {
   this->refreshDisplay();
 }
 
-bool Menu::handleInput(char inputKey) {
+bool Menu::handleKeyPressed(char inputKey) {
   switch (inputKey) {
      case '2':
         --this->menuItemIndex;
@@ -91,7 +92,7 @@ void Menu::refreshDisplay() {
   }
 }
 
-MenuResult Menu::createResult() {
+MenuResult Menu::getResult() {
   MenuResult result;
   if (this->isCanceled()) {
     result.selectedIndex = -1;

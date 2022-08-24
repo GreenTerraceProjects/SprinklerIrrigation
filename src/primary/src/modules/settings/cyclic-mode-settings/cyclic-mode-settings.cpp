@@ -2,10 +2,11 @@
 #include "cylic-mode-setting/cylic-mode-setting.hpp"
 #include "../../inputs/menu/menu.hpp"
 #include "../../devices/eeprom/addresses.hpp"
+#include "../../devices/keypad/keypad.hpp"
 #include <avr/pgmspace.h>
 
-CyclicModeSettings::CyclicModeSettings(CyclicModeSettingsArgs &args)
-    : Input(args) {
+CyclicModeSettings::CyclicModeSettings()
+    : Input(&keypad) {
 
 }
 
@@ -13,12 +14,8 @@ void CyclicModeSettings::initialize() {
     this->showSettings();
 }
 
-bool CyclicModeSettings::handleInput(char inputKey) {
+bool CyclicModeSettings::handleKeyPressed(char inputKey) {
     return false;
-}
-
-CyclicModeSettingsResult CyclicModeSettings::createResult() {
-    return CyclicModeSettingsResult();
 }
 
 static const char menu_item_0[] PROGMEM = "Full Duration";

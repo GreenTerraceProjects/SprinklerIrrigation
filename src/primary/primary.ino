@@ -339,7 +339,9 @@ void displayTimeSpan(TimeSpan value, bool isFullTimeSpan, const char *title) {
 }
 
 void displayDateTime(DateTime value) {
-  DateTimeLabelArgs args(value);
+  DateTimeLabelArgs args {
+    .value = value
+  };
   DateTimeLabel label(args);
   label.view();
 }
@@ -407,38 +409,31 @@ void changeSettings() {
 }
 
 void showDefaultIrrigationMode() {
-  DefaultIrrigationModeArgs args;
-  DefaultIrrigationMode setting(args);
+  DefaultIrrigationMode setting;
   setting.run();
 }
 
 void showCyclicModeSettings() {
-  CyclicModeSettingsArgs args;
-  CyclicModeSettings settings(args);
+  CyclicModeSettings settings;
   settings.run();
 }
 
 void showCustomModeSettings() {
-  CustomModeEntriesArgs args;
-  CustomModeEntries entries(args);
+  CustomModeEntries entries;
   entries.run();
 }
 
 void showPumpSettings() {
-  PumpSettingsArgs args;
-  PumpSettings settings(args);
+  PumpSettings settings;
   settings.run();
 }
 
 void showRTCAdjustment() {
-  RtcAdjustmentArgs args;
-  RtcAdjustment adjustment(args);
+  RtcAdjustment adjustment;
   adjustment.run();
 }
 
 void resetEEPROM() {
-  EEPROMCleaningArgs args;
-  EEPROMCleaning cleaning(args);
+  EEPROMCleaning cleaning;
   cleaning.run();
 }
-

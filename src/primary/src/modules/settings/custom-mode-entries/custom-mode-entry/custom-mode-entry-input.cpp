@@ -4,13 +4,15 @@
 #include "custom-mode-entry-label.hpp"
 #include "../../../devices/lcd/lcd.hpp"
 #include "../../../devices/buzzer/buzzer.hpp"
+#include "../../../devices/keypad/keypad.hpp"
 
 CustomModeEntryInput::CustomModeEntryInput(CustomModeEntryInputArgs &args)
     :
+    args(args),
     lineIndex(0),
     startAt(args.defaultStartAt),
     duration(args.defaultDuration),
-    Input(args) {
+    Input(&keypad) {
 
 }
 
@@ -18,7 +20,7 @@ void CustomModeEntryInput::initialize() {
     this->lineIndex = 0;
 }
 
-bool CustomModeEntryInput::handleInput(char inputKey) {
+bool CustomModeEntryInput::handleKeyPressed(char inputKey) {
     switch (inputKey) {
         case '2':
             --this->lineIndex;
@@ -81,22 +83,22 @@ void CustomModeEntryInput::inputTimeSpan() {
             return;
         }
 
-        TimeSpanInputResult timeSpanInputResult = timeSpanInput.getResult();
-        if (timeSpanInputResult.value.totalseconds() > MAX_TIMESPAN_IN_SEC) {
+        TimeSpan value = timeSpanInput.getTimeSpan();
+        if (value.totalseconds() > MAX_TIMESPAN_IN_SEC) {
             lowBeep();
 
-            timeSpanInputArgs.defaultValue = timeSpanInputResult.value;
+            timeSpanInputArgs.defaultValue = value;
             continue;
         }
 
 
         uint32_t *assignDest = this->lineIndex == 0 ? &this->startAt : &this->duration;
-        *assignDest = timeSpanInputResult.value.totalseconds();
+        *assignDest = value.totalseconds();
         break;
     }
 }
 
-CustomModeEntryInputResult CustomModeEntryInput::createResult() {
+CustomModeEntryInputResult CustomModeEntryInput::getResult() {
     return CustomModeEntryInputResult {
         .startAt = this->startAt,
         .duration = this->duration

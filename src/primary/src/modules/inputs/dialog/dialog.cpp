@@ -1,8 +1,9 @@
 #include "dialog.hpp"
 #include "../input.hpp"
 #include "../../devices/lcd/lcd.hpp"
+#include "../../devices/keypad/keypad.hpp"
 
-Dialog::Dialog(DialogArgs &args) : Input(args) {
+Dialog::Dialog(DialogArgs &args) : args(args), Input(&keypad) {
     
 }
 
@@ -13,7 +14,7 @@ void Dialog::initialize() {
     this->refreshDisplay();
 }
 
-bool Dialog::handleInput(char inputKey) {
+bool Dialog::handleKeyPressed(char inputKey) {
     switch (inputKey) {
         case '4':
             this->wordWrapMovingDirection = WordWrapMovingDirection::Backward;
@@ -45,7 +46,7 @@ bool Dialog::handleInput(char inputKey) {
     return true;
 }
 
-DialogResult Dialog::createResult() {
+DialogResult Dialog::getResult() {
     DialogResult dialogResult;
     
     if (this->isCanceled()) {

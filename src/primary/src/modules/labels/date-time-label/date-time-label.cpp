@@ -3,12 +3,7 @@
 #include "../../strings/labels/date-time-labels.hpp"
 #include "../../strings/formats/date-time-format-strings.hpp"
 
-DateTimeLabelArgs::DateTimeLabelArgs(DateTime value) : value(value) {
-
-}
-
-DateTimeLabel::DateTimeLabel(DateTimeLabelArgs &args)
-    : Label(args) {
+DateTimeLabel::DateTimeLabel(DateTimeLabelArgs &args) : args(args) {
 
 }
 

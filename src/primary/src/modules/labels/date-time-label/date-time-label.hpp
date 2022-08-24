@@ -6,15 +6,15 @@
 
 class DateTimeLabelArgs {
 public:
-    DateTimeLabelArgs(DateTime value);
-
-public:
     DateTime value;
 };
 
-class DateTimeLabel : public Label<DateTimeLabelArgs> {
+class DateTimeLabel : public Label {
 public:
     DateTimeLabel(DateTimeLabelArgs &args);
+
+protected:
+    DateTimeLabelArgs &args;
 
 protected:
     void initialize() override;

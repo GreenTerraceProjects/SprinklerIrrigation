@@ -3,8 +3,8 @@
 #include "../../../inputs/menu/menu.hpp"
 #include <avr/pgmspace.h>
 
-WaterHammerDelays::WaterHammerDelays(WaterHammerDelaysArgs &args)
-    : Input(args) {
+WaterHammerDelays::WaterHammerDelays()
+    : Input() {
 
 }
 
@@ -12,12 +12,8 @@ void WaterHammerDelays::initialize() {
 
 }
 
-bool WaterHammerDelays::handleInput(char inputKey) {
+bool WaterHammerDelays::handleKeyPressed(char inputKey) {
     return false;
-}
-
-WaterHammerDelaysResult WaterHammerDelays::createResult() {
-    return WaterHammerDelaysResult();
 }
 
 const char water_hammer_delay_when_start_pump[] PROGMEM = "When start pump";

@@ -1,7 +1,6 @@
 #ifndef _CUSTOM_MODE_ENTRY_WRITER_HPP_
 #define _CUSTOM_MODE_ENTRY_WRITER_HPP_
 
-#include "../../setting-writer.hpp"
 #include "../../../errors/errors.hpp"
 #include <stdint.h>
 
@@ -12,17 +11,15 @@ public:
     uint32_t duration;
 };
 
-class CustomModeEntryWriterResult {
-
-};
-
-class CustomModeEntryWriter : public SettingWriter<CustomModeEntryWriterResult, CustomModeEntryWriterArgs>{
+class CustomModeEntryWriter{
 public:
     CustomModeEntryWriter(CustomModeEntryWriterArgs &args);
 
 protected:
-    enum ERROR write() override;
-    CustomModeEntryWriterResult createResult() override;
+    CustomModeEntryWriterArgs &args;
+
+public:
+    void write();
 };
 
 #endif

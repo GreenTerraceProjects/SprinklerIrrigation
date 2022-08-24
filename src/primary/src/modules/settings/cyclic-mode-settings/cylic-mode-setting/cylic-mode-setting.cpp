@@ -1,11 +1,12 @@
 #include "cylic-mode-setting.hpp"
-#include "cyclic-mode-setting-label.hpp"
-#include "cyclic-mode-setting-input.hpp"
-#include "cyclic-mode-setting-reader.hpp"
-#include "cyclic-mode-setting-writer.hpp"
+#include "../../../labels/time-span-label/time-span-label.hpp"
+#include "../../../inputs/timespan-input/timespan-input.hpp"
+#include "../../../devices/keypad/keypad.hpp"
+#include "../../../devices/buzzer/buzzer.hpp"
+#include <EEPROM.h>
 
 CyclicModeSetting::CyclicModeSetting(CyclicModeSettingArgs &args)
-    : Input(args) {
+    : args(args), Input(&keypad) {
 
 }
 
@@ -13,7 +14,7 @@ void CyclicModeSetting::initialize() {
 
 }
 
-bool CyclicModeSetting::handleInput(char inputKey) {
+bool CyclicModeSetting::handleKeyPressed(char inputKey) {
     switch (inputKey) {
         case '5':
             this->inputSetting();
@@ -29,48 +30,50 @@ bool CyclicModeSetting::handleInput(char inputKey) {
     return true;
 }
 
-CyclicModeSettingResult CyclicModeSetting::createResult() {
-    return CyclicModeSettingResult();
-}
-
 uint32_t CyclicModeSetting::readSetting() {
-    CyclicModeSettingReaderArgs args {
-        .address =  this->args.address
-    };
-    CyclicModeSettingReader reader(args);
-    reader.run();
-    CyclicModeSettingReaderResult result = reader.getResult();
-    return result.value;
+    uint32_t value;
+    EEPROM.get(this->args.address, value);
+    return value;
 }
 
 void CyclicModeSetting::writeSetting(uint32_t value) {
-    CyclicModeSettingWriterArgs args {
-        .address = this->args.address,
-        .value = value
-    };
-    CyclicModeSettingWriter writer(args);
-    writer.run();
+    EEPROM.put(this->args.address, value);
 }
 
 void CyclicModeSetting::showSetting() {
-    CyclicModeSettingLabelArgs args = {
+    TimeSpanLabelArgs args {
         .value = this->readSetting(),
         .isFullTimeSpan = this->args.isFullTimeSpan,
-        .title = this->args.title
+        .label = this->args.title
     };
+
+    TimeSpanLabel label(args);
+    label.view();
 }
 
 void CyclicModeSetting::inputSetting() {
-    CylicModeSettingInputArgs args {
-        .defaultValue = this->readSetting(),
+    TimeSpanInputArgs args {
         .isFullTimeSpan = this->args.isFullTimeSpan,
-        .maxValue = this->args.maxValue
+        .defaultValue = this->readSetting()
     };
-    CylicModeSettingInput input(args);
-    input.run();
+    TimeSpanInput input(args);
+    while (true) {
+        input.run();
+        if (input.isCanceled()) {
+            this->cancel();
+            return;
+        }
 
-    if (!input.isCanceled()) {
-        CylicModeSettingInputResult result = input.getResult();
-        this->writeSetting(result.value);
+        TimeSpan timeSpan = input.getTimeSpan();
+        if (timeSpan.totalseconds() > this->args.maxValue) {
+            lowBeep();
+            args.defaultValue = timeSpan;
+            continue;
+        }
+
+        uint32_t writtenValue = timeSpan.totalseconds();
+        this->writeSetting(writtenValue);
+
+        break;
     }
 }

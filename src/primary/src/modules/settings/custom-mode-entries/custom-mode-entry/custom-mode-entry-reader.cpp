@@ -3,24 +3,23 @@
 #include "../../../devices/eeprom/addresses.hpp"
 
 CustomModeEntryReader::CustomModeEntryReader(CustomModeEntryReaderArgs &args)
-    : startAt(0), duration(0), SettingReader(args) {
+    : args(args) {
 
 }
 
-enum ERROR CustomModeEntryReader::read() {
+CustomModeEntryReaderResult CustomModeEntryReader::read() {
+    uint32_t startAt;
+    uint32_t duration;
+
     int address = EEPROM_CUSTOM_MODE_SETTINGS_ADDRESS
         + sizeof(uint32_t) * 2 * this->args.index;
-    EEPROM.get(address, this->startAt);
+    EEPROM.get(address, startAt);
     
     address += sizeof(uint32_t);
-    EEPROM.get(address, this->duration);
+    EEPROM.get(address, duration);
     
-    return ERROR::NONE;
-}
-
-CustomModeEntryReaderResult CustomModeEntryReader::createResult() {
     return CustomModeEntryReaderResult {
-        .startAt = this->startAt,
-        .duration = this->duration
+        .startAt = startAt,
+        .duration = duration
     };
 }

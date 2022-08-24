@@ -3,22 +3,13 @@
 
 #include "../../../inputs/input.hpp"
 
-class WaterHammerDelaysArgs {
-
-};
-
-class WaterHammerDelaysResult {
-
-};
-
-class WaterHammerDelays : public Input<WaterHammerDelaysResult, WaterHammerDelaysArgs> {
+class WaterHammerDelays : public Input {
 public:
-    WaterHammerDelays(WaterHammerDelaysArgs &args);
+    WaterHammerDelays();
 
 protected:
     void initialize() override;
-    bool handleInput(char inputKey) override;
-    WaterHammerDelaysResult createResult() override;
+    bool handleKeyPressed(char inputKey) override;
 
 protected:
     int selectedDelayIndex;

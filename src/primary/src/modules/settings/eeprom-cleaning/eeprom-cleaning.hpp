@@ -3,22 +3,18 @@
 
 #include "../../inputs/input.hpp"
 
-class EEPROMCleaningArgs {
-
-};
-
-class EEPROMCleaningResult {
-
-};
-
-class EEPROMCleaning : public Input<EEPROMCleaningResult, EEPROMCleaningArgs> {
+class EEPROMCleaning : public Input {
 public:
-    EEPROMCleaning(EEPROMCleaningArgs &args);
+    EEPROMCleaning();
 
 protected:
     void initialize() override;
-    bool handleInput(char inputKey) override;
-    EEPROMCleaningResult createResult() override;
+    bool handleKeyPressed(char inputKey) override;
+
+private:
+    bool confirmCleaning();
+    void informCleaned();
+    void clean();
 };
 
 #endif

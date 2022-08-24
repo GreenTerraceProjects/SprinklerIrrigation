@@ -16,9 +16,10 @@ public:
     int defaultItemIndex;
 };
 
-class Menu : public Input<MenuResult, MenuArgs> {
+class Menu : public Input {
 
 private:
+    MenuArgs &args;
     int menuItemIndex;
     bool menuItemChanged;
     int menuItemPageStartingLine;
@@ -27,10 +28,12 @@ private:
 public:
     Menu(MenuArgs& args);
 
+public:
+    MenuResult getResult();
+
 private:
     void initialize() override;
-    bool handleInput(char inputKey) override;
-    MenuResult createResult() override;
+    bool handleKeyPressed(char inputKey) override;
 
 private:
     void refreshDisplay();

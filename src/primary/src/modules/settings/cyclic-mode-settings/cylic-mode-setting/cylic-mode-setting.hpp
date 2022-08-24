@@ -12,18 +12,16 @@ public:
     const char *title;
 };
 
-class CyclicModeSettingResult {
-
-};
-
-class CyclicModeSetting : public Input<CyclicModeSettingResult, CyclicModeSettingArgs> {
+class CyclicModeSetting : public Input {
 public:
     CyclicModeSetting(CyclicModeSettingArgs &args);
 
 protected:
+    CyclicModeSettingArgs &args;
+
+protected:
     void initialize() override;
-    bool handleInput(char inputKey) override;
-    CyclicModeSettingResult createResult() override;
+    bool handleKeyPressed(char inputKey) override;
 
 protected:
     uint32_t readSetting();

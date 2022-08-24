@@ -3,22 +3,13 @@
 
 #include "../../../inputs/input.hpp"
 
-class EnablePumpMotorArgs {
-
-};
-
-class EnablePumpMotorResult {
-
-};
-
-class EnablePumpMotor : public Input<EnablePumpMotorResult, EnablePumpMotorArgs> {
+class EnablePumpMotor : public Input {
 public:
-    EnablePumpMotor(EnablePumpMotorArgs &args);
+    EnablePumpMotor();
 
 protected:
     void initialize() override;
-    bool handleInput(char inputKey) override;
-    EnablePumpMotorResult createResult() override;
+    bool handleKeyPressed(char inputKey) override;
 
 protected:
     bool readSetting();

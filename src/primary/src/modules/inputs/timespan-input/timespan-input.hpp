@@ -10,25 +10,23 @@ public:
     TimeSpan defaultValue;
 };
 
-class TimeSpanInputResult {
-public:
-    TimeSpan value;
-};
-
-class TimeSpanInput : public Input<TimeSpanInputResult, TimeSpanInputArgs> {
+class TimeSpanInput : public Input {
 public:
     TimeSpanInput(TimeSpanInputArgs &args);
 
+public:
+    TimeSpan getTimeSpan();
+
 protected:
     void initialize() override;
-    bool handleInput(char inputKey) override;
-    TimeSpanInputResult createResult() override;
+    bool handleKeyPressed(char inputKey) override;
 
 protected:
     static const int CUSOR_PADDING = 4;
     static const int INPUT_BUFFER_LENGTH = 12;
 
 protected:
+    TimeSpanInputArgs &args;
     char inputBuffer[INPUT_BUFFER_LENGTH];
     int index;
     int days, hours, minutes, seconds;

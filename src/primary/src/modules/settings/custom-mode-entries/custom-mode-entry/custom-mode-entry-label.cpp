@@ -4,7 +4,7 @@
 #include "../../../strings/formats/date-time-format-strings.hpp"
 
 CustomModeEntryLabel::CustomModeEntryLabel(CustomModeEntryLabelArgs &args)
-    : Label(args) {
+    : args(args) {
 
 }
 

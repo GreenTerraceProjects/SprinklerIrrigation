@@ -9,19 +9,19 @@ public:
     uint32_t defaultValue;
 };
 
-class UnsignedIntegerInputResult {
-public:
-    uint32_t value;
-};
-
-class UnsignedIntegerInput : public Input<UnsignedIntegerInputResult, UnsignedIntegerInputArgs> {
+class UnsignedIntegerInput : public Input {
 public:
     UnsignedIntegerInput(UnsignedIntegerInputArgs &args);
 
 protected:
+    UnsignedIntegerInputArgs &args;
+
+public:
+    uint32_t getValue();
+
+protected:
     void initialize() override;
-    bool handleInput(char inputKey) override;
-    UnsignedIntegerInputResult createResult() override;
+    bool handleKeyPressed(char inputKey) override;
 
 protected:
     static const int NUMBER_LENGTH = 10;
@@ -32,7 +32,5 @@ protected:
 protected:
     void refreshDisplay();
 };
-
-uint32_t inputUnsignedInteger(uint32_t defaultValue, bool* isCanceled);
 
 #endif

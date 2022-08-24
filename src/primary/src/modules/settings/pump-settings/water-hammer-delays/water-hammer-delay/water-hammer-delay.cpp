@@ -1,12 +1,12 @@
 #include "water-hammer-delay.hpp"
-#include "water-hammer-delay-input.hpp"
-#include "water-hammer-delay-label.hpp"
-#include "water-hammer-delay-reader.hpp"
-#include "water-hammer-delay-writer.hpp"
 #include "../../../../devices/eeprom/addresses.hpp"
+#include "../../../../devices/lcd/lcd.hpp"
+#include "../../../../devices/buzzer/buzzer.hpp"
+#include "../../../../inputs/unsigned-integer-input/unsigned-integer-input.hpp"
+#include <EEPROM.h>
 
 WaterHammerDelay::WaterHammerDelay(WaterHammerDelayArgs &args)
-    : Input(args) {
+    : args(args), Input() {
 
 }
 
@@ -14,7 +14,7 @@ void WaterHammerDelay::initialize() {
     
 }
 
-bool WaterHammerDelay::handleInput(char inputKey) {
+bool WaterHammerDelay::handleKeyPressed(char inputKey) {
     switch (inputKey) {
         case '5':
             this->doInput();
@@ -30,55 +30,54 @@ bool WaterHammerDelay::handleInput(char inputKey) {
     return true;
 }
 
-WaterHammerDelayResult WaterHammerDelay::createResult() {
-    return WaterHammerDelayResult();
-}
-
 uint16_t WaterHammerDelay::readDelay() {
     int eepromAddress = EEPROM_PREVENT_WATER_HAMMER_SETTING_ADDRESS + sizeof(uint16_t) * this->args.selectedDelayIndex;
-    WaterHammerDelayReaderArgs waterHammerDelayReaderArgs = {
-        .address = eepromAddress
-    };
-    WaterHammerDelayReader waterHammerDelayReader(waterHammerDelayReaderArgs);
-    waterHammerDelayReader.run();
-    auto waterHammerDelayReaderResult = waterHammerDelayReader.getResult();
-    return waterHammerDelayReaderResult.value;
+
+    uint16_t value;
+    EEPROM.get(eepromAddress, value);
+    return value;
 }
 
 void WaterHammerDelay::writeDelay(uint16_t value) {
     int eepromAddress = EEPROM_PREVENT_WATER_HAMMER_SETTING_ADDRESS + sizeof(uint16_t) * this->args.selectedDelayIndex;
-    WaterHammerDelayWriterArgs waterHammerDelayWriterArgs = {
-        .address = eepromAddress,
-        .value = value
-    };
-
-    WaterHammerDelayWriter waterHammerDelayWriter(waterHammerDelayWriterArgs);
-    waterHammerDelayWriter.run();
+    EEPROM.put(eepromAddress, value);
 }
 
 void WaterHammerDelay::showDelay() {
-    WaterHammerDelayLabelArgs args = {
-        .value = this->readDelay(),
-        .maxValue = 60000
-    };
+    const int OUTPUT_BUFFER_SIZE = LCD_COLS + 1;
+    char buffer[OUTPUT_BUFFER_SIZE] = { '\0' };
 
-    WaterHammerDelayLabel waterHammerDelayLabel(args);
-    waterHammerDelayLabel.view();
+    snprintf_P(
+        buffer,
+        OUTPUT_BUFFER_SIZE,
+        PSTR("[0; %u] ms"),
+        60000);
+    lcd.print(buffer);
+    lcd.setCursor(0, 1);
+    lcd.print(this->readDelay());
 }
 
 void WaterHammerDelay::doInput() {
-    WaterHammerDelayInputArgs waterHammerDelayInputArgs = {
-        .defaultValue = this->readDelay(),
-        .maxValue = 60000
+    UnsignedIntegerInputArgs unsignedIntegerInputArgs {
+        .defaultValue = this->readDelay()
     };
 
-    WaterHammerDelayInput waterHammerDelayInput(waterHammerDelayInputArgs);
-    waterHammerDelayInput.run();
+    UnsignedIntegerInput unsignedIntegerInput(unsignedIntegerInputArgs);
+    while (true) {
+        unsignedIntegerInput.run();
 
-    if (waterHammerDelayInput.isCanceled()) {
-        return;
-    }    
-    
-    WaterHammerDelayInputResult waterHammerDelayInputResult = waterHammerDelayInput.getResult();
-    this->writeDelay(waterHammerDelayInputResult.value);
+        if (unsignedIntegerInput.isCanceled()) {
+            return;
+        }
+
+        uint32_t value = unsignedIntegerInput.getValue();
+        if (value > 60000) {
+            unsignedIntegerInputArgs.defaultValue = value;
+            lowBeep();
+            continue;
+        }
+
+        this->writeDelay(value);
+        break;
+    }
 }

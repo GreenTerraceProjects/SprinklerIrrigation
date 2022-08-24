@@ -1,6 +1,6 @@
 #include "watch-dog.hpp"
-#include "../../devices/rtc/rtc.hpp"
 #include <avr/wdt.h>
+#include "../rtc/rtc.hpp"
 
 DateTime lastInteract;
 

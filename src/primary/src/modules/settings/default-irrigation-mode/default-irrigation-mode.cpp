@@ -1,11 +1,12 @@
 #include "default-irrigation-mode.hpp"
-#include "default-irrigation-mode-reader.hpp"
-#include "default-irrigation-mode-writer.hpp"
 #include "../../inputs/menu/menu.hpp"
+#include "../../devices/keypad/keypad.hpp"
+#include "../../devices/eeprom/addresses.hpp"
 #include <avr/pgmspace.h>
+#include <EEPROM.h>
 
-DefaultIrrigationMode::DefaultIrrigationMode(DefaultIrrigationModeArgs &args)
-  : Input(args) {
+DefaultIrrigationMode::DefaultIrrigationMode()
+  : Input(&keypad) {
 
 }
 
@@ -41,26 +42,16 @@ void DefaultIrrigationMode::initialize() {
   this->writeDefaultIrriationMode(menuResult.selectedIndex);
 }
 
-bool DefaultIrrigationMode::handleInput(char inputKey) {
+bool DefaultIrrigationMode::handleKeyPressed(char inputKey) {
   return false;
 }
 
-DefaultIrrigationModeResult DefaultIrrigationMode::createResult() {
-  return DefaultIrrigationModeResult();
-}
-
 uint8_t DefaultIrrigationMode::readDefaultIrrigationMode() {
-  DefaultIrrigationModeReaderArgs args;
-  DefaultIrrigationModeReader reader(args);
-  reader.run();
-  DefaultIrrigationModeReaderResult result = reader.getResult();
-  return result.value;
+  uint32_t value;
+  EEPROM.get(EEPROM_DEFAULT_IRRIGATION_MODE_SETTING_ADDRESS, value);
+  return value;
 }
 
 void DefaultIrrigationMode::writeDefaultIrriationMode(uint8_t value) {
-  DefaultIrrigationModeWriterArgs args {
-    .value = value
-  };
-  DefaultIrrigationModeWriter writer(args);
-  writer.run();
+  EEPROM.put(EEPROM_DEFAULT_IRRIGATION_MODE_SETTING_ADDRESS, value);
 }

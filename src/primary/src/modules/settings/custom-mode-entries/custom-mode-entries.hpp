@@ -8,17 +8,9 @@
 
 #define MAX_NUM_ENTRIES 24
 
-class CustomModeEntriesArgs {
-
-};
-
-class CustomModeEntriesResult {
-
-};
-
-class CustomModeEntries : public Input<CustomModeEntriesResult, CustomModeEntriesArgs> {
+class CustomModeEntries : public Input {
 public:
-    CustomModeEntries(CustomModeEntriesArgs &args);
+    CustomModeEntries();
 
 protected:
     int8_t entries[MAX_NUM_ENTRIES];
@@ -28,8 +20,7 @@ protected:
 
 protected:
     void initialize() override;
-    bool handleInput(char inputKey) override;
-    CustomModeEntriesResult createResult() override;
+    bool handleKeyPressed(char inputKey) override;
 
 protected:
     void readCurrentEntry();

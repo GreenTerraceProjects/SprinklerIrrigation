@@ -4,8 +4,10 @@
 #include "../../devices/buzzer/buzzer.hpp"
 #include "../../strings/labels/date-time-labels.hpp"
 #include "../../strings/formats/date-time-format-strings.hpp"
+#include "../../devices/keypad/keypad.hpp"
 
-DateTimeInput::DateTimeInput(DateTimeInputArgs &args) : Input(args) {
+
+DateTimeInput::DateTimeInput(DateTimeInputArgs &args) : args(args), Input(&keypad) {
 
 }
 
@@ -20,7 +22,7 @@ void DateTimeInput::initialize() {
   this->refreshDisplay();
 }
 
-bool DateTimeInput::handleInput(char inputKey) {
+bool DateTimeInput::handleKeyPressed(char inputKey) {
   char *const inputBuffer = this->lineIndex == 0 ?
                             this->inputBuffer0 : this->inputBuffer1;
   int *const index = this->lineIndex == 0 ?
@@ -150,20 +152,16 @@ void DateTimeInput::refreshDisplay() {
   }
 }
 
-DateTimeInputResult DateTimeInput::createResult() {
-  DateTimeInputResult result;
-  
+DateTime DateTimeInput::getDateTime() {  
   if (this->isCanceled()) {
-    result.value = this->args.defaultValue;
-  } else {
-    result.value = DateTime(
-      this->year,
-      this->month,
-      this->day,
-      this->hour,
-      this->minute,
-      this->second);
+    return this->args.defaultValue;
   }
-
-  return result;
+  
+  return DateTime(
+    this->year,
+    this->month,
+    this->day,
+    this->hour,
+    this->minute,
+    this->second);
 }

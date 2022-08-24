@@ -3,22 +3,13 @@
 
 #include "../../inputs/input.hpp"
 
-class PumpSettingsArgs {
-
-};
-
-class PumpSettingsResult {
-
-};
-
-class PumpSettings : public Input<PumpSettingsResult, PumpSettingsArgs> {
+class PumpSettings : public Input {
 public:
-    PumpSettings(PumpSettingsArgs &args);
+    PumpSettings();
 
 protected:
     void initialize() override;
-    bool handleInput(char inputKey) override;
-    PumpSettingsResult createResult() override;
+    bool handleKeyPressed(char inputKey) override;
 
 protected:
     void showSettings();

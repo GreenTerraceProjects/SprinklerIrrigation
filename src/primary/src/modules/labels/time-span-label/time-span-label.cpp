@@ -3,7 +3,7 @@
 #include "../../strings/formats/date-time-format-strings.hpp"
 
 TimeSpanLabel::TimeSpanLabel(TimeSpanLabelArgs &args)
-    : Label(args) {
+    : args(args) {
 
 }
 

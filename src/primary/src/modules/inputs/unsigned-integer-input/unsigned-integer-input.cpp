@@ -1,7 +1,7 @@
 #include "unsigned-integer-input.hpp"
 #include "../../devices/lcd/lcd.hpp"
 
-UnsignedIntegerInput::UnsignedIntegerInput(UnsignedIntegerInputArgs &args) : Input(args) {
+UnsignedIntegerInput::UnsignedIntegerInput(UnsignedIntegerInputArgs &args) : args(args), Input() {
 
 }
 
@@ -17,7 +17,7 @@ void UnsignedIntegerInput::initialize() {
   lcd.cursor();
 }
 
-bool UnsignedIntegerInput::handleInput(char inputKey) {
+bool UnsignedIntegerInput::handleKeyPressed(char inputKey) {
   switch (inputKey) {
     case '0':
     case '1':
@@ -99,14 +99,10 @@ void UnsignedIntegerInput::refreshDisplay() {
   lcd.setCursor(this->index, 1);
 }
 
-UnsignedIntegerInputResult UnsignedIntegerInput::createResult() {
-  UnsignedIntegerInputResult result;
-
+uint32_t UnsignedIntegerInput::getValue() {
   if (this->isCanceled()) {
-    result.value = this->args.defaultValue;
-  } else {
-    result.value = strtoul(this->inputBuffer, NULL, 10);
+    return this->args.defaultValue;
   }
 
-  return result;
+  return strtoul(this->inputBuffer, NULL, 10);
 }

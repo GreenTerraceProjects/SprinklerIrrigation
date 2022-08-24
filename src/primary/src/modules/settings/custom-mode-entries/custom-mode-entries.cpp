@@ -1,9 +1,10 @@
 #include "../../devices/lcd/lcd.hpp"
+#include "../../devices/keypad/keypad.hpp"
 #include "custom-mode-entries.hpp"
 #include "custom-mode-entry/custom-mode-entry-label.hpp"
 
-CustomModeEntries::CustomModeEntries(CustomModeEntriesArgs &args)
-    : entries { 0 }, index(0), Input(args) {
+CustomModeEntries::CustomModeEntries()
+    : entries { 0 }, index(0), Input(&keypad) {
 
 }
 
@@ -18,7 +19,7 @@ void CustomModeEntries::initialize() {
     this->viewCurrentEntry();
 }
 
-bool CustomModeEntries::handleInput(char inputKey) {
+bool CustomModeEntries::handleKeyPressed(char inputKey) {
     switch (inputKey) {
         case '2':
             --this->index;
@@ -52,10 +53,6 @@ bool CustomModeEntries::handleInput(char inputKey) {
 
     this->viewCurrentEntry();
     return true;
-}
-
-CustomModeEntriesResult CustomModeEntries::createResult() {
-    return CustomModeEntriesResult();
 }
 
 void CustomModeEntries::viewCurrentEntry() {
@@ -98,9 +95,8 @@ void CustomModeEntries::readCurrentEntry() {
         .index = this->getRealIndex()
     };
     CustomModeEntryReader entryReader(args);
-    entryReader.run();
     
-    auto entry = entryReader.getResult();
+    auto entry = entryReader.read();
     this->currentStartAt = entry.startAt;
     this->currentDuration = entry.duration;
 }
@@ -112,7 +108,7 @@ void CustomModeEntries::writeCurrentEntry() {
         .duration = this->currentDuration
     };
     CustomModeEntryWriter entryWriter(args);
-    entryWriter.run();
+    entryWriter.write();
 }
 
 int8_t CustomModeEntries::getRealIndex() {
@@ -137,14 +133,12 @@ int CustomModeEntries::comparator(const void *a, const void *b) {
         .index = *_a
     };
     CustomModeEntryReader entryReader(entryReaderArgs);
-    entryReader.run();
-    CustomModeEntryReaderResult entryA = entryReader.getResult();
+    CustomModeEntryReaderResult entryA = entryReader.read();
 
     entryReaderArgs = CustomModeEntryReaderArgs {
         .index = *_b
     };
-    entryReader.run();
-    CustomModeEntryReaderResult entryB = entryReader.getResult();
+    CustomModeEntryReaderResult entryB = entryReader.read();
 
     if (entryA.startAt == 0 && entryA.duration == 0) {
         return 1;

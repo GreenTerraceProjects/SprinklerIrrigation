@@ -1,11 +1,12 @@
 #include "rtc-adjustment.hpp"
 #include "rtc-reader.hpp"
 #include "rtc-writer.hpp"
-#include "rtc-label.hpp"
-#include "rtc-input.hpp"
 #include "../../devices/rtc/rtc.hpp"
+#include "../../devices/keypad/keypad.hpp"
+#include "../../inputs/date-time-input/date-time-input.hpp"
+#include "../../labels/date-time-label/date-time-label.hpp"
 
-RtcAdjustment::RtcAdjustment(RtcAdjustmentArgs &args) : InputWithPolling(args) {
+RtcAdjustment::RtcAdjustment() : Input(&keypad) {
 
 }
 
@@ -28,7 +29,7 @@ bool RtcAdjustment::handlePolling() {
     return true;
 }
 
-bool RtcAdjustment::handleInput(char inputKey) {
+bool RtcAdjustment::handleKeyPressed(char inputKey) {
     switch (inputKey) {
         case '5':
             this->doRtcInput();
@@ -43,44 +44,33 @@ bool RtcAdjustment::handleInput(char inputKey) {
     return true;
 }
 
-RtcAdjustmentResult RtcAdjustment::createResult() {
-    return RtcAdjustmentResult();
-}
-
 DateTime RtcAdjustment::readRtcValue() {
-    RtcReaderArgs rtcReaderArgs;
-    RtcReader rtcReader(rtcReaderArgs);
-    rtcReader.run();
-    RtcReaderResult rtcReaderResult = rtcReader.getResult();
-
-    return rtcReaderResult.value;
+    RtcReader rtcReader;
+    return rtcReader.read();
 }
 
 void RtcAdjustment::writeRtcValue(DateTime value) {
-    RtcWriterArgs rtcWriterArgs {
-        .value = value
-    };
-    RtcWriter rtcWriter(rtcWriterArgs);
-    rtcWriter.run();
+    RtcWriter rtcWriter;
+    rtcWriter.write(value);
 }
 
 void RtcAdjustment::doRtcLabel() {
-    RtcLabelArgs rtcLabelArgs(this->readRtcValue());
-    RtcLabel rtcLabel(rtcLabelArgs);
-    rtcLabel.view();
+    DateTimeLabelArgs args {
+        .value = this->readRtcValue()
+    };
+    DateTimeLabel dateTimeLabel(args);
+    dateTimeLabel.view();
 }
 
 void RtcAdjustment::doRtcInput() {
-    RtcInputArgs rtcInputArgs {
+    DateTimeInputArgs dateTimeInputArgs {
         .defaultValue = this->readRtcValue()
     };
-    RtcInput rtcInput(rtcInputArgs);
-    rtcInput.run();
+    DateTimeInput dateTimeInput(dateTimeInputArgs);
+    dateTimeInput.run();
 
-    if (!rtcInput.isCanceled()) {
-        RtcInputResult rtcInputResult = rtcInput.getResult();
-
-        this->writeRtcValue(rtcInputResult.value);
+    if (!dateTimeInput.isCanceled()) {
+        this->writeRtcValue(dateTimeInput.getDateTime());
 
         // resetLastInternalRTCUpdate();
         // resetLastInteractTimer();

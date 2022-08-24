@@ -29,10 +29,13 @@ public:
     enum Result result;
 };
 
-class Dialog: public Input<DialogResult, DialogArgs> {
+class Dialog: public Input {
 
 public:
     Dialog(DialogArgs &args);
+
+private:
+    DialogArgs &args;
 
 private:
     int wordWrapLine;
@@ -41,8 +44,10 @@ private:
 
 private:
     void initialize() override;
-    bool handleInput(char inputKey) override;
-    DialogResult createResult() override;
+    bool handleKeyPressed(char inputKey) override;
+
+public:
+    DialogResult getResult();
 
 private:
     const char *getActionString();
