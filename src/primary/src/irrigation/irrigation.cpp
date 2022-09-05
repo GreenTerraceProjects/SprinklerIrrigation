@@ -57,7 +57,7 @@ void irrigateWithCyclicMode(RTC_Micros* rtc) {
   }
 }
 
-DateTime irrgateWithCustomMode(RTC_Micros* rtc) {
+void irrgateWithCustomMode(RTC_Micros* rtc) {
   DateTime now = rtc->now();
 
   int eepromAddress = EEPROM_CUSTOM_MODE_SETTINGS_ADDRESS;

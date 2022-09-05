@@ -8,10 +8,12 @@
 #include "../datetime-label/datetime-label.hpp"
 
 DateTime lastDisplay(2022, 4, 30, 23, 59, 59);
+
 int8_t displayStatusCounter = 0;
 const int8_t DISPLAY_STATUS_COUNTER_MAX_VALUE = 5;
+
 bool displayImmediately = false;
-enum DisplayStatusType currentDisplayStatus = CurrentDateTime;
+enum DisplayStatusType currentDisplayStatus = DisplayStatusType::CurrentDateTime;
 
 void setDisplayStatus(enum DisplayStatusType type) {
   displayImmediately = true;
@@ -39,18 +41,21 @@ void jumpToNextDisplayStatusType() {
 }
 
 void printStatus() {
-  lcd.clear();
-  lcd.lineWrap();
-  lcd.noCursor();
-
   DateTime now = rtc.now();
+
+  if (currentDisplayStatus == DeviceTitle ||
+      currentDisplayStatus == CurrentIrrigationMode) {
+    clearLcd();
+    lcd.noCursor();
+  }
 
   if (currentDisplayStatus == DeviceTitle) {
     lcd.print(F("Sprinkler"));
     lcd.setCursor(0, 1);
     lcd.print(F("Irrigation"));
   } else if (currentDisplayStatus == CurrentIrrigationMode) {
-    lcd.print(F("Mode:"));
+    lcd.print(F("Irrigation Mode:"));
+    lcd.setCursor(0, 1);
     switch (irrigationMode) {
       case ALWAYS_OFF:
         lcd.print(F("[A] - Always Off"));
@@ -69,15 +74,17 @@ void printStatus() {
     } 
   } else if (currentDisplayStatus == CurrentPumpStatus) {
     if (isPumpOn) {
-      displayTimeSpan(true, &(now - pumpStartedAt), PSTR("Pump: ON"));
+      TimeSpan workingDuration = now - pumpStartedAt;
+      displayTimeSpan(true, &workingDuration, PSTR("Pump: ON"));
     } else {
-      displayTimeSpan(true, &(now - pumpStoppedAt), PSTR("Pump: OFF"));
+      TimeSpan stoppingDuration = now - pumpStoppedAt;
+      displayTimeSpan(true, &stoppingDuration, PSTR("Pump: OFF"));
     }
   } else {
     displayDateTime(&now);
   }
 
-  lcd.setCursor(15, 1);
+  lcd.setCursor(LCD_COLS - 1, 1);
   lcd.blink();
 }
 

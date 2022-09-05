@@ -13,7 +13,7 @@ void displayDateTime(DateTime* dateTime) {
       ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
   */
   const int bufferLength = 12;
-  char output[bufferLength] = { '\0' };
+  char output[bufferLength] = { };
 
   lcd.print((const __FlashStringHelper *)(&dateLabel[0]));
   snprintf_P(output, bufferLength, (const char *)(&dateFormat[0]),

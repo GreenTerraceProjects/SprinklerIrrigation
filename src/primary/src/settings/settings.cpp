@@ -8,9 +8,10 @@
 #include "eeprom-cleaning/eeprom-cleaning.hpp"
 #include <avr/wdt.h>
 #include <avr/pgmspace.h>
+#include <Arduino.h>
 
 void reset() {
-  lcd.clear();
+  clearLcd();
   lcd.print(F("Restarting ..."));
   lcd.blink();
   

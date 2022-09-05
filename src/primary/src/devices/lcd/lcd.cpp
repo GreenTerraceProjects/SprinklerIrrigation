@@ -7,28 +7,40 @@ const uint8_t LCD_COLS = 16;
 const uint8_t LCD_ROWS = 2;
 
 void restoreLcd() {
-  lcd.clear();
+  clearLcd();
   lcd.noLineWrap();
   lcd.noCursor();
   lcd.noBlink();
 }
 
-void clearCld() {
-  char blank[LCD_COLS + 1] = { ' ' };
-  blank[LCD_COLS] = '\0';
+void fillSpace(char *src, int size) {
+  for (int index = 0; index < size - 1; ++index) {
+    src[index] = ' ';
+  }
+  src[size - 1] = '\0';
+}
 
-  for (int row = 0; row < LCD_ROWS; ++row) {
-    lcd.setCursor(0, row);
+void clearLcd() {
+  const int blankSize = LCD_COLS + 1;
+  char blank[blankSize];
+  fillSpace(blank, blankSize);
+
+  for (uint8_t rowIndex = 0; rowIndex < LCD_ROWS; ++rowIndex) {
+    lcd.setCursor(0, rowIndex);
     lcd.print(blank);
   }
+
+  lcd.setCursor(0, 0);
 }
 
 void clearLcdRow(int row) {
-  char blank[LCD_COLS + 1] = { ' ' };
-  blank[LCD_COLS] = '\0';
+  const int blankSize = LCD_COLS + 1;
+  char blank[blankSize];
+  fillSpace(blank, blankSize);
 
   lcd.setCursor(0, row);
   lcd.print(blank);
+  lcd.setCursor(0, row);
 }
 
 void setupLCD() {

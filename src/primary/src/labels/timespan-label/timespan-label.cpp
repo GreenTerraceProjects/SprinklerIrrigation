@@ -1,4 +1,6 @@
 #include "timespan-label.hpp"
+#include <avr/pgmspace.h>
+#include <stdio.h>
 #include "../../devices/lcd/lcd.hpp"
 #include "../../strings/formats/datetime-formats.hpp"
 
@@ -8,7 +10,7 @@ void displayTimeSpan(bool isFullTimeSpan, TimeSpan* timeSpan, const char *label)
   lcd.print((const __FlashStringHelper *)(&label[0]));
 
   const int bufferLength = 12;
-  char buffer[bufferLength] = { '\0' };
+  char buffer[bufferLength] = { };
 
   if (isFullTimeSpan) {
     snprintf_P(buffer, bufferLength, (const char *)(&timeSpanFormat[0]),

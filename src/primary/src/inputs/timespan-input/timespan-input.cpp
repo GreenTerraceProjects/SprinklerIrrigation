@@ -1,4 +1,6 @@
 #include "timespan-input.hpp"
+#include <stdio.h>
+#include <string.h>
 #include "../../devices/lcd/lcd.hpp"
 #include "../../devices/keypad/keypad.hpp"
 #include "../../devices/buzzer/buzzer.hpp"
@@ -21,7 +23,7 @@ TimeSpan inputTimeSpan(bool fullTimeSpan, TimeSpan *defaultValue, bool *isCancel
   const int CUSOR_PADDING = 4;
 
   const int bufferLength = 12;
-  char input[bufferLength] = { '\0' };
+  char input[bufferLength] = { };
   
   if (fullTimeSpan) {
     lcd.print(F("Set DD-HH:MM:SS"));
@@ -128,12 +130,12 @@ TimeSpan inputTimeSpan(bool fullTimeSpan, TimeSpan *defaultValue, bool *isCancel
     lcd.setCursor(CUSOR_PADDING + index, 1);
   }
 
-  restoreLcd();
   if (isCanceled != NULL) {
     *isCanceled = cancel;
   }
   if (cancel) {
     return *defaultValue;
   }
+
   return TimeSpan(dd, hh, mm, ss);
 }

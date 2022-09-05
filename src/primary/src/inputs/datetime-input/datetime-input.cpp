@@ -20,10 +20,8 @@ DateTime inputDateTime(DateTime* defaultValue) {
   const int8_t CUSOR_PADDING = 6;
 
   const int inputBufferLength = 12;
-  char input0[inputBufferLength] = { '\0' };
-  char input1[inputBufferLength] = { '\0' };
-
-  char temp[5] = { '\0' };
+  char input0[inputBufferLength] = { };
+  char input1[inputBufferLength] = { };
 
   snprintf_P(input0, inputBufferLength, (const char *)(&dateFormat[0]), 
     defaultValue->year(),

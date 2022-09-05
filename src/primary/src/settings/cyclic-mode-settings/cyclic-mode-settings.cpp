@@ -1,5 +1,6 @@
 #include "cyclic-mode-settings.hpp"
 #include <EEPROM.h>
+#include <avr/pgmspace.h>
 #include "../../inputs/menu/menu.hpp"
 #include "../../inputs/timespan-input/timespan-input.hpp"
 #include "../../inputs/keypad-utils/keypad-utils.hpp"

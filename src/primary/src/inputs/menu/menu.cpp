@@ -11,14 +11,14 @@ int showMenu(int numItems, const char* const *menu, int defaultItemIndex) {
   int itemIndex = defaultItemIndex;
 
   const int bufferLength = LCD_COLS + 1;
-  char buffer[bufferLength] = { '\0' };
+  char buffer[bufferLength] = { };
   const int prefixLength = 5;
-  char prefix[prefixLength] = { '\0' };
+  char prefix[prefixLength] = { };
   
   const char *menuItem = NULL;
   bool menuItemChanged = true;
 
-  byte wordWordBuff[sizeof(WordWrap)];
+  byte wordWordBuff[sizeof(WordWrap)] = { };
   WordWrap *wordWrap = NULL;
   int wordWrapLineIndex;
 
@@ -27,13 +27,13 @@ int showMenu(int numItems, const char* const *menu, int defaultItemIndex) {
   bool bypassGetKey = true;
   while (loop) {
     char key = '\0';
-    if (!bypassGetKey)
+    if (bypassGetKey) {
+      bypassGetKey = false;
+    } else {
       if (!waitForKeyPressed(key)) {
         cancel = true;
         break;
       }
-    else {
-      bypassGetKey = false;
     }
 
     switch (key) {
@@ -80,11 +80,11 @@ int showMenu(int numItems, const char* const *menu, int defaultItemIndex) {
 
       snprintf_P(prefix, prefixLength, (const char *)(&prefixFormat[0]), itemIndex + 1);
       wordWrap = new(wordWordBuff)WordWrap(menuItem, buffer, bufferLength, prefix, LCD_ROWS);
+      wordWrapLineIndex = 0;
     }
 
     wordWrap->getLine(wordWrapLineIndex);
-    lcd.clear();
-    lcd.setCursor(0, 0);
+    clearLcd();
     lcd.print(buffer);
     wordWrap->getLine(wordWrapLineIndex + 1);
     lcd.setCursor(0, 1);

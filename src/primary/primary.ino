@@ -21,6 +21,13 @@ D: Custom Mode: There are 24 slots for setting starting time and running duratio
 #include "src/settings/settings.hpp"
 
 void setup() {
+  Serial.begin(115200);
+  while (!Serial) {
+    ;
+  }
+
+  Serial.println(F("Working..."));
+
   wdt_enable(WDTO_8S);
 
   setupRTC();

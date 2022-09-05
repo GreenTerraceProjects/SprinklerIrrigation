@@ -10,21 +10,21 @@
 #include "../../../devices/keypad/keypad.hpp"
 #include "../../../devices/buzzer/buzzer.hpp"
 
-void changeWaterHammerDelaySetting(int eepromAddress);
+void changeWaterHammerPreventionSetting(int eepromAddress);
 
-const char water_hammer_delay_when_start_pump[] PROGMEM = "When start pump";
-const char water_hammer_delay_when_stop_pump[] PROGMEM = "When stop pump";
-const char* const water_hammer_delay_menu[] PROGMEM = {
-  water_hammer_delay_when_start_pump,
-  water_hammer_delay_when_stop_pump
+const char water_hammer_prevention_0[] PROGMEM = "Pump Starting Delay";
+const char water_hammer_prevention_1[] PROGMEM = "Valve Closing Delay";
+const char* const water_hammer_prevention_menu[] PROGMEM = {
+  water_hammer_prevention_0,
+  water_hammer_prevention_1
 };
-void changeWaterHammerDelaySettings() {
-  const int menuSize = sizeof(water_hammer_delay_menu) / sizeof(water_hammer_delay_menu[0]);
+void changeWaterHammerPreventionSettings() {
+  const int menuSize = sizeof(water_hammer_prevention_menu) / sizeof(water_hammer_prevention_menu[0]);
 
   int selectedItem = 0;
   bool loop = true;
   while (loop) {
-    selectedItem = showMenu(menuSize, water_hammer_delay_menu, selectedItem);
+    selectedItem = showMenu(menuSize, water_hammer_prevention_menu, selectedItem);
     uint16_t defaultValue;
     int selectedEepromAddress;
     if (selectedItem == 0) {
@@ -35,15 +35,15 @@ void changeWaterHammerDelaySettings() {
       break;
     }
 
-    changeWaterHammerDelaySetting(selectedEepromAddress);
+    changeWaterHammerPreventionSetting(selectedEepromAddress);
   }
 }
 
-void changeWaterHammerDelaySetting(int eepromAddress) {
+void changeWaterHammerPreventionSetting(int eepromAddress) {
   const uint16_t MAX_VALUE = 60000;
   
   const int bufferSize = LCD_COLS + 1;
-  char buffer[bufferSize] = { '\0' };
+  char buffer[bufferSize] = { };
 
   bool loop = true;
   bool skipKeyPad = true;

@@ -12,7 +12,7 @@ int8_t displayDialog(const char* message, enum DialogType dialogType) {
   restoreLcd();
 
   const int bufferSize = LCD_COLS + 1;
-  char buffer[bufferSize] = { '\0' };
+  char buffer[bufferSize] = { };
   
   WordWrap wordWrap(message, buffer, bufferSize);
   int messageWordWrapLineIndex = 0;
@@ -58,7 +58,7 @@ int8_t displayDialog(const char* message, enum DialogType dialogType) {
     }
     
     wordWrap.getLine(messageWordWrapLineIndex);
-    lcd.clear();
+    clearLcd();
     lcd.print(buffer);
     
     const char *actionsStr = NULL;

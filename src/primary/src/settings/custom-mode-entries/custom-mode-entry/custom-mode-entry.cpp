@@ -1,5 +1,7 @@
 #include "custom-mode-entry.hpp"
+#include <stdio.h>
 #include "../../../inputs/too-long-to-loop/too-long-to-loop.hpp"
+#include "../../../inputs/keypad-utils/keypad-utils.hpp"
 #include "../../../inputs/timespan-input/timespan-input.hpp"
 #include "../../../strings/formats/number-formats.hpp"
 #include "../../../strings/formats/datetime-formats.hpp"
@@ -14,16 +16,14 @@ void changeCustomModeSetting(int sortedIndex, uint32_t &startAt, uint32_t &durat
   bool loop = true;
   bool cancel = false;
   while (loop) {
-    if (tooLongToLoop()) {
-      cancel = true;
-      break;
-    }
-
-    char key = keypad.getKey();
-    if (!key && !bypassGetKey) continue;
+    char key = '\0';
     if (bypassGetKey) {
-      key = '\0';
       bypassGetKey = false;
+    } else {
+      if (!waitForKeyPressed(key)) {
+        cancel = true;
+        break;  
+      }
     }
 
     switch(key) {
@@ -99,7 +99,7 @@ void displayCustomSetting(int sortedIndex, const uint32_t &startAt, const uint32
   //  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
   const int bufferLength = 12;
-  char buffer[bufferLength] = { '\0' };
+  char buffer[bufferLength] = { };
   // bufferLength;
   snprintf_P(buffer, bufferLength, (const char *)(&twoNumberPrefixFormat[0]),
     sortedIndex + 1);

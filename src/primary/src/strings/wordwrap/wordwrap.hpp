@@ -23,7 +23,6 @@ public:
 
 public:
   WordWrap& operator=(const WordWrap &wordWrap);
-  // void *operator new(std::size_t size, void *ptr);
 
 public:
   WordWrap(const WordWrap &wordWrap);

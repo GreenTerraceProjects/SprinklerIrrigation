@@ -4,8 +4,8 @@
 #include "water-hammer-settings/water-hammer-settings.hpp"
 #include "../../inputs/menu/menu.hpp"
 
-const char pump_settings_menu_item_0[] PROGMEM = "Pump Motor Enabled";
-const char pump_settings_menu_Item_1[] PROGMEM = "Water Hammer Delay";
+const char pump_settings_menu_item_0[] PROGMEM = "Pump Motor Availability";
+const char pump_settings_menu_Item_1[] PROGMEM = "Water Hammer Prevention";
 const char* const pump_settings_menu[] PROGMEM = {
   pump_settings_menu_item_0,
   pump_settings_menu_Item_1
@@ -19,10 +19,10 @@ void changePumpSettings() {
     selectedSetting = showMenu(menuSize, pump_settings_menu, displayedSetting);
     switch(selectedSetting) {
       case 0:
-        changeEnablePumpMotorSetting();
+        changePumpMotorAvailabilitySetting();
         break;
       case 1:
-        changeWaterHammerDelaySettings();
+        changeWaterHammerPreventionSettings();
         break;
       default:
         loop = false;

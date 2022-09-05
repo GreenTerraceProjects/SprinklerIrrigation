@@ -11,6 +11,7 @@ extern const uint8_t LCD_COLS;
 extern const uint8_t LCD_ROWS;
 
 void restoreLcd();
+void clearLcd();
 void clearLcdRow(int row);
 void setupLCD();
 

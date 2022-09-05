@@ -11,7 +11,7 @@ uint32_t inputUnsignedInteger(uint32_t defaultValue, bool* isCanceled) {
 
   const int NUMBER_LENGTH = 10;
   const int INPUT_BUFFER_LENGTH = NUMBER_LENGTH + 1;
-  char input[INPUT_BUFFER_LENGTH] = { '\0' };
+  char input[INPUT_BUFFER_LENGTH];
   memset(input, '\0', INPUT_BUFFER_LENGTH);
   if (defaultValue != 0) {
     snprintf_P(input, INPUT_BUFFER_LENGTH, PSTR("%lu"), defaultValue);
@@ -94,7 +94,6 @@ uint32_t inputUnsignedInteger(uint32_t defaultValue, bool* isCanceled) {
 
     memset(&input[strlen(input)], '\0', INPUT_BUFFER_LENGTH - strlen(input));
     clearLcdRow(1);
-    lcd.setCursor(0, 1);
     lcd.print(input);
     lcd.setCursor(index, 1);
   }

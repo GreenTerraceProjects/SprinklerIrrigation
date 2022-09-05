@@ -22,7 +22,7 @@ void adjustRTC() {
     DateTime evalNow = rtc.now();
     if (evalNow != displayTime || redraw) {
       if (redraw) {
-        lcd.clear();
+        clearLcd();
         redraw = false;
       }
       displayTime = evalNow;

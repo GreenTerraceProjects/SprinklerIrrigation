@@ -4,14 +4,14 @@
 #include "../../../devices/eeprom/eeprom-addresses.hpp"
 #include "../../../inputs/menu/menu.hpp"
 
-const char menu_item_0[] PROGMEM = "No";
-const char menu_item_1[] PROGMEM = "Yes";
+const char menu_item_0[] PROGMEM = "Disabled";
+const char menu_item_1[] PROGMEM = "Enabled";
 const char* const menu[] PROGMEM = {
   menu_item_0,
   menu_item_1
 };
 
-void changeEnablePumpMotorSetting() {
+void changePumpMotorAvailabilitySetting() {
   bool defaultSetting;
   EEPROM.get(EEPROM_PUMP_MOTOR_ENABLED_ADDRESS, defaultSetting);
 
