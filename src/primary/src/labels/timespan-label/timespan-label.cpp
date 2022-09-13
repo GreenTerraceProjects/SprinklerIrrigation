@@ -1,13 +1,13 @@
 #include "timespan-label.hpp"
 #include <avr/pgmspace.h>
 #include <stdio.h>
-#include "../../devices/lcd/lcd.hpp"
+#include "../../devices/lcd/lcd-shadow.hpp"
 #include "../../strings/formats/datetime-formats.hpp"
 
 void displayTimeSpan(bool isFullTimeSpan, TimeSpan* timeSpan, const char *label) {
-  restoreLcd();
+  lcdShadow.clear();
 
-  lcd.print((const __FlashStringHelper *)(&label[0]));
+  lcdShadow.print((const __FlashStringHelper *)(&label[0]));
 
   const int bufferLength = 12;
   char buffer[bufferLength] = { };
@@ -25,7 +25,7 @@ void displayTimeSpan(bool isFullTimeSpan, TimeSpan* timeSpan, const char *label)
       timeSpan->seconds());
   }
 
-  lcd.setCursor(0, 1);
-  lcd.print(buffer);
+  lcdShadow.setCursor(0, 1);
+  lcdShadow.print(buffer);
+  lcdShadow.commit();
 }
-

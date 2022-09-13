@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-extern const uint8_t TONE_PIN;
-extern const uint8_t PUMP_RELAY_PIN;
-extern const uint8_t VALVE_RELAY_PIN;
+const uint8_t TONE_PIN = 11;
+const uint8_t PUMP_RELAY_PIN = 12;
+const uint8_t VALVE_RELAY_PIN = 13;
 
 #endif

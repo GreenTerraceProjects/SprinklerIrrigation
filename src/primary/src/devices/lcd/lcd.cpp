@@ -3,9 +3,6 @@
 
 hd44780_I2Cexp lcd;
 
-const uint8_t LCD_COLS = 16;
-const uint8_t LCD_ROWS = 2;
-
 void restoreLcd() {
   clearLcd();
   lcd.noLineWrap();

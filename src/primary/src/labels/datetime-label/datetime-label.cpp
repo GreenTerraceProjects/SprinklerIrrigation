@@ -1,10 +1,11 @@
 #include "datetime-label.hpp"
 #include "../../devices/lcd/lcd.hpp"
+#include "../../devices/lcd/lcd-shadow.hpp"
 #include "../../strings/formats/datetime-formats.hpp"
 #include "../../strings/labels/datetime-labels.hpp"
 
 void displayDateTime(DateTime* dateTime) {
-  restoreLcd();
+  lcdShadow.clear();
 
   /*
       ________________
@@ -15,18 +16,20 @@ void displayDateTime(DateTime* dateTime) {
   const int bufferLength = 12;
   char output[bufferLength] = { };
 
-  lcd.print((const __FlashStringHelper *)(&dateLabel[0]));
+  lcdShadow.print((const __FlashStringHelper *)(&dateLabel[0]));
   snprintf_P(output, bufferLength, (const char *)(&dateFormat[0]),
     dateTime->year(),
     dateTime->month(),
     dateTime->day());
-  lcd.print(output);
+  lcdShadow.print(output);
 
-  lcd.setCursor(0, 1);
-  lcd.print((const __FlashStringHelper *)(&timeLabel[0]));
+  lcdShadow.setCursor(0, 1);
+  lcdShadow.print((const __FlashStringHelper *)(&timeLabel[0]));
   snprintf_P(output, bufferLength, (const char *)(&timeFormat[0]),
     dateTime->hour(),
     dateTime->minute(),
     dateTime->second());
-  lcd.print(output);
+  lcdShadow.print(output);
+
+  lcdShadow.commit();
 }

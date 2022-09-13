@@ -8,11 +8,11 @@
 
 void adjustRTC() {
   restoreLcd();
-  
+
   rtc.adjust(rtcDS3231.now());
 
   DateTime displayTime = rtc.now();
-  bool redraw = true;
+  bool refreshDisplayImmediately = true;
   bool loop = true;
   while(loop) {
     if (tooLongToLoop()) {
@@ -20,10 +20,10 @@ void adjustRTC() {
     }
 
     DateTime evalNow = rtc.now();
-    if (evalNow != displayTime || redraw) {
-      if (redraw) {
+    if (evalNow != displayTime || refreshDisplayImmediately) {
+      if (refreshDisplayImmediately) {
         clearLcd();
-        redraw = false;
+        refreshDisplayImmediately = false;
       }
       displayTime = evalNow;
       displayDateTime(&displayTime);
@@ -39,8 +39,11 @@ void adjustRTC() {
         if (adjustedNow != defaultValue) {
           rtc.adjust(adjustedNow);
           rtcDS3231.adjust(rtc.now());
+
+          resetLastInternalRTCUpdate();
+          resetLastInteractTimer();
         }
-        redraw = true;
+        refreshDisplayImmediately = true;
       } break;
       case '*':
         loop = false;
@@ -49,7 +52,4 @@ void adjustRTC() {
         break;
     }
   }
-
-  resetLastInternalRTCUpdate();
-  resetLastInteractTimer();
 }

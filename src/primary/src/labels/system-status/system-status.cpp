@@ -2,6 +2,7 @@
 #include <RTClib.h>
 #include "../../devices/rtc/rtc.hpp"
 #include "../../devices/lcd/lcd.hpp"
+#include "../../devices/lcd/lcd-shadow.hpp"
 #include "../../devices/pump/pump.hpp"
 #include "../../irrigation/irrigation.hpp"
 #include "../timespan-label/timespan-label.hpp"
@@ -45,33 +46,36 @@ void printStatus() {
 
   if (currentDisplayStatus == DeviceTitle ||
       currentDisplayStatus == CurrentIrrigationMode) {
-    clearLcd();
+    lcdShadow.clear();
     lcd.noCursor();
   }
+  lcd.noBlink();
 
   if (currentDisplayStatus == DeviceTitle) {
-    lcd.print(F("Sprinkler"));
-    lcd.setCursor(0, 1);
-    lcd.print(F("Irrigation"));
+    lcdShadow.print(F("Sprinkler"));
+    lcdShadow.setCursor(0, 1);
+    lcdShadow.print(F("Irrigation"));
+    lcdShadow.commit();
   } else if (currentDisplayStatus == CurrentIrrigationMode) {
-    lcd.print(F("Irrigation Mode:"));
-    lcd.setCursor(0, 1);
+    lcdShadow.print(F("Irrigation Mode:"));
+    lcdShadow.setCursor(0, 1);
     switch (irrigationMode) {
       case ALWAYS_OFF:
-        lcd.print(F("[A] - Always Off"));
+        lcdShadow.print(F("[A] - Always Off"));
         break;
       case ALWAYS_ON:
-        lcd.print(F("[B] - Always On"));
+        lcdShadow.print(F("[B] - Always On"));
         break;
       case CYCLIC:
-        lcd.print(F("[C] - Cyclic"));
+        lcdShadow.print(F("[C] - Cyclic"));
         break;
       case CUSTOM:
-        lcd.print(F("[D] - Custom"));
+        lcdShadow.print(F("[D] - Custom"));
         break;
       default:
         break;
-    } 
+    }
+    lcdShadow.commit();
   } else if (currentDisplayStatus == CurrentPumpStatus) {
     if (isPumpOn) {
       TimeSpan workingDuration = now - pumpStartedAt;

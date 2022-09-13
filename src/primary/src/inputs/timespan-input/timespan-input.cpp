@@ -130,6 +130,8 @@ TimeSpan inputTimeSpan(bool fullTimeSpan, TimeSpan *defaultValue, bool *isCancel
     lcd.setCursor(CUSOR_PADDING + index, 1);
   }
 
+  lcd.noCursor();
+
   if (isCanceled != NULL) {
     *isCanceled = cancel;
   }

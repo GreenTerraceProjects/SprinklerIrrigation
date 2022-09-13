@@ -4,11 +4,12 @@
 #include <Wire.h>
 #include <hd44780.h>
 #include <hd44780ioClass/hd44780_I2Cexp.h>
+#include <stdint.h>
 
 extern hd44780_I2Cexp lcd;
 
-extern const uint8_t LCD_COLS;
-extern const uint8_t LCD_ROWS;
+const uint8_t LCD_COLS = 16;
+const uint8_t LCD_ROWS = 2;
 
 void restoreLcd();
 void clearLcd();
